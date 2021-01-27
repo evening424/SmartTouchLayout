@@ -26,3 +26,4 @@ FrameLayout怎么用，它就怎么用。<br>
 疑车不能无据，直接上图
 -----------------
 <br>
+![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053733_974.gif)
