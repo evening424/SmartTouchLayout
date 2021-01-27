@@ -5,7 +5,7 @@
 -------
 产品需要实现跟微信朋友圈看大图可下滑退出的效果，<br>
 但项目中不仅有大图，图中还有按钮，有文本，有视频等等，总之布局很复杂<br>
-反正这些他不管，就是要下滑退出,再缩回上一层界面小图片位置。<br>
+反正这些他不管，就是要下滑退出，再缩回上一层界面小图片位置。<br>
 <br>
 找了不少DEMO，基本都是只满足图片，视频实现这个功能， 那就自己来
 <br>
@@ -50,7 +50,7 @@ FrameLayout怎么用，它就怎么用。<br>
 1.引用<br>
 
 ```
-implementation 'com.jagger:SmartTouchLayout:1.0.0'
+implementation 'com.jagger:SmartTouchLayout:1.0.1'
 ``` 
 
 
@@ -99,3 +99,13 @@ smartTouchLayout.setZoomEnable(true);
         <item name="android:windowIsTranslucent">true</item>
 </style>
 ```
+<br>
+<br>
+
+如果为哥你节省了几天宝贵的时间，为何不打赏一杯柠檬茶呢？
+-----------------
+
+<br>
+
+![](https://github.com/evening424/resource/blob/master/images/WechatIMG1.jpeg)
+
