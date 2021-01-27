@@ -102,6 +102,211 @@ smartTouchLayout.setZoomEnable(true);
 <br>
 <br>
 
+代码解读
+-----------------
+通过计算点击的时间差，判断是单击还是双击
+
+```
+
+private void checkClickDown(MotionEvent ev){
+    if (0 == mInTouchEventCount.touchCount) { // 第一次按下时,开始统计
+        //Log.i(TAG , "checkClickDown 第一次按下时,开始统计" );
+        postDelayed(mInTouchEventCount, DOUBLE_CLICK_TIME_OFFSET);
+    }
+}
+
+private void checkClickUp(float clickX, float clickY){
+    //Log.i(TAG , "checkClickUp clickX:" + clickX + ",clickY:" + clickY);
+    // 一次点击事件要有按下和抬起, 有抬起必有按下, 所以只需要在ACTION_UP中处理
+    if (!mInTouchEventCount.isLongClick) {
+        mInTouchEventCount.touchCount++;
+
+        if(mInTouchEventCount.touchCount == 1){
+            firstClickX = clickX;
+            firstClickY = clickY;
+            //Log.i(TAG , "checkClickUp 点击第一下");
+        }else if(mInTouchEventCount.touchCount == 2){
+            secondClickX = clickX;
+            secondClickY = clickY;
+
+            float xOff = Math.abs(firstClickX - secondClickX);
+            float yOff = Math.abs(firstClickY - secondClickY);
+            //两次点击距离相近
+            if(xOff < 60 && yOff < 60 ){
+                //Double click 成立
+                //Log.i(TAG , "checkClickUp Double click 成立");
+            }else{
+                //Double click 不成立，当单击处理
+                mInTouchEventCount.touchCount = 1;
+                //Log.i(TAG , "checkClickUp Double click 不成立，当单击处理");
+            }
+        }else{
+            mInTouchEventCount.touchCount = 0;
+            //Log.i(TAG , "checkClickUp 复原");
+        }
+    }else {
+        // 长按复原
+        mInTouchEventCount.isLongClick = false;
+        //Log.i(TAG , "checkClickUp 长按复原");
+    }
+}
+
+private class TouchEventCountThread implements Runnable {
+    public int touchCount = 0;
+    public boolean isLongClick = false;
+
+    @Override
+    public void run() {
+        Message msg = new Message();
+        if(0 == touchCount){ // long click
+            isLongClick = true;
+        } else {
+            msg.arg1 = touchCount;
+            mTouchEventHandler.sendMessage(msg);
+            touchCount = 0;
+        }
+        //Log.i(TAG , "TouchEventCountThread 结束:" + touchCount);
+    }
+}
+
+private class TouchEventHandler extends Handler {
+    @Override
+    public void handleMessage(Message msg) {
+        //Log.i(TAG, "touch " + msg.arg1 + " time.");
+        if(msg.arg1 == 1){
+            onSingleClicked(oldX, oldY);
+        }else{
+            onDoubleClicked(oldX, oldY);
+        }
+    }
+}
+```
+
+<br>
+如果单击，判断把事件向子VIEW传递还是自已处理
+
+```
+public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+    final int action = ev.getAction();
+    if(action == MotionEvent.ACTION_MOVE && mTouchState == TOUCH_MYSELF){
+        //Log.i(TAG, "拦截 为自己处理");
+        return true;
+    }
+
+    switch (action) {
+        case MotionEvent.ACTION_DOWN:
+            //判断单双击
+            checkClickDown(ev);
+
+            //
+            oldX = ev.getRawX();
+            oldY = ev.getRawY();
+            mTouchState = (isZooming || isMoving) ? TOUCH_MYSELF : TOUCH_TO_CHILDREN;
+            //Log.e(TAG, "onInterceptTouchEvent ACTION_DOWN oldX:" + oldX + ",mTouchState:" + mTouchState);
+            break;
+        case MotionEvent.ACTION_MOVE:
+            // 是否进行了滑动，设置滑动状态
+            float tMoveX = ev.getRawX() - oldX;
+            final float xDiff = Math.abs(tMoveX);
+
+            float tMoveY = ev.getRawY() - oldY;
+            final float yDiff = Math.abs(tMoveY);
+
+            if (yDiff > mTouchSlop || xDiff > mTouchSlop) {
+                mTouchState = TOUCH_MYSELF;
+            }
+            break;
+        case MotionEvent.ACTION_CANCEL:
+        case MotionEvent.ACTION_UP:
+            mTouchState = TOUCH_TO_CHILDREN;
+            break;
+    }
+
+    // origin do
+    return mTouchState != TOUCH_TO_CHILDREN;
+}
+```
+<br>
+处理缩放
+
+```
+@Override
+public boolean onScale(ScaleGestureDetector detector) {
+    float scaleFactor = detector.getScaleFactor();
+
+    if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
+        return false;
+
+    //双指缩放中
+    isZooming = true;
+    mCurrentScale *= scaleFactor;
+    if(mCurrentScale < MIN_SCALE){
+        mCurrentScale = MIN_SCALE;
+    }
+    setScaleX(mCurrentScale);
+    setScaleY(mCurrentScale);
+
+    //返回 true 会一闪一闪的
+    return false;
+}
+
+@Override
+public void onScaleEnd(ScaleGestureDetector detector) {
+    super.onScaleEnd(detector);
+
+    //Log.i(TAG, "onScaleEnd" );
+    scaleEnd();
+}
+
+};
+
+```
+<br>
+在 onTouchEvent() 中处理滑动事件, 
+缩放时自己处理滑动事件，
+非缩放时把滑动事件向父传递，所以 ViewPage 会处理左右滑动事件
+
+```
+if(isZooming){
+   //缩放时， 自己处理MOVE事件
+   getParent().requestDisallowInterceptTouchEvent(true);
+}else {
+   //非缩放时， 由父控件处理MOVE事件
+   getParent().requestDisallowInterceptTouchEvent(false);
+   ...
+}
+```
+
+<br>
+滑动和缩放过程中，处理边界回弹 checkBorder()
+
+```
+float overRightOffset = location[0] - (mCurrentScale*getWidth() - originalRight)*-1;
+float overBottomOffset = location[1] - (mCurrentScale*getHeight() - originalBottom)*-1;
+
+if(location[0] > 0){
+    //是否越入左边界
+    moveX4Zooming = ((1-mCurrentScale) * getWidth())/2 * -1;   //放大后相对于 原来大小的 X 坐标的偏移
+    //是否越入上,下边界
+    checkTopBottomBorder(location[1], overBottomOffset);
+    animZoomingMoveToBorder(moveX4Zooming, moveY4Zooming);
+}else if(overRightOffset < 0){
+    //是否越入右边界
+    moveX4Zooming += Math.abs(overRightOffset);   //放大前的 X=0
+    //是否越入上,下边界
+    checkTopBottomBorder(location[1], overBottomOffset);
+    animZoomingMoveToBorder(moveX4Zooming, moveY4Zooming);
+}else{
+    //是否越入上,下边界
+    checkTopBottomBorder(location[1], overBottomOffset);
+    animZoomingMoveToBorder(moveX4Zooming, moveY4Zooming);
+}
+```
+
+<br>
+
+
 下载体验
 -----------------
 <br>
