@@ -106,7 +106,7 @@ smartTouchLayout.setZoomEnable(true);
 -----------------
 <br>
 
-![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.1_download.png)
+![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.2_download.png?raw=true)
 
 <br>
 
