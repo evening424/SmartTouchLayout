@@ -68,3 +68,17 @@ implementation 'com.jagger:SmartTouchLayout:1.0.0'
 </com.jagger.smartviewlibrary.SmartTouchLayout>
 ```
 
+3.属性设置
+<br>设置结束时动画飞到哪去，可指定位置和大小，效果如图1；不设置，则飞到底部如图2；
+```
+smartTouchLayout.setEndViewLocalSize(结束时的宽，结束时的高，结束时的X坐标，结束时的Y坐标，结束时以宽/高拉申)
+```
+<br>设置是否需要支持下滑关闭
+```
+smartTouchLayout.setMoveExitEnable(true);
+```
+
+<br>设置是否需要支持缩放
+```
+smartTouchLayout.setZoomEnable(true);
+```
