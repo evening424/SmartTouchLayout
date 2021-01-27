@@ -302,7 +302,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
 //                            //Log.e(TAG, "下滑动");
 
                             //可下滑关闭
-                            if(isMoveExitEnable && !isZooming) {
+                            if(isMoveExitEnable && !isZooming && !isLockMoveInZooming) {
                                 //下滑超出屏幕多少
 //                                int[] location = new int[2];
 //                                getLocationOnScreen(location);
@@ -713,7 +713,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * @param clickY
      */
     private void onSingleClicked(float clickX, float clickY){
-        if(!isZooming){
+        if(!isZooming && !isLockMoveInZooming){
             isFinish = false;
             animEnding();
         }
