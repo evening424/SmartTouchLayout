@@ -50,7 +50,7 @@ FrameLayout怎么用，它就怎么用。<br>
 1.引用<br>
 
 ```
-implementation 'com.jagger:SmartTouchLayout:1.0.0'
+implementation 'com.jagger:SmartTouchLayout:1.0.1'
 ``` 
 
 
