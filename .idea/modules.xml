@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SmartTouchLayout-master.iml" filepath="$PROJECT_DIR$/SmartTouchLayout-master.iml" group="SmartTouchLayout-master" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="SmartTouchLayout-master/app" />
+      <module fileurl="file://$PROJECT_DIR$/smartviewlibrary/smartviewlibrary.iml" filepath="$PROJECT_DIR$/smartviewlibrary/smartviewlibrary.iml" group="SmartTouchLayout-master/smartviewlibrary" />
+    </modules>
+  </component>
+</project>

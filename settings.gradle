@@ -1,0 +1,3 @@
+rootProject.name='SmartTouchLayout-master'
+include ':app'
+include ':smartviewlibrary'
