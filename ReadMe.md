@@ -29,11 +29,14 @@ FrameLayout怎么用，它就怎么用。<br>
 ![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053733_974.gif)
 <br>
 双指、双击缩放；下滑退出到指定位置;
+<br>
 
 ![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053832_721.gif)
 <br>
 不影响子控件事件；不指定位置时，下滑到底部消失;
+<br>
 
 ![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053812_258.gif)
 <br>
 与ViewPage不冲突；
+<br>
