@@ -81,3 +81,13 @@ smartTouchLayout.setMoveExitEnable(true);
 ```
 smartTouchLayout.setZoomEnable(true);
 ```
+
+4.最后要把归属的Activity设置为透明
+```
+<!-- AppCompatActivity设置透明主题 -->
+<style name="MyTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+</style>
+```
