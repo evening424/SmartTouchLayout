@@ -73,12 +73,11 @@ implementation 'com.jagger:SmartTouchLayout:1.0.0'
 ```
 smartTouchLayout.setEndViewLocalSize(结束时的宽，结束时的高，结束时的X坐标，结束时的Y坐标，结束时以宽/高拉申)
 ```
-<br>设置是否需要支持下滑关闭
+设置是否需要支持下滑关闭
 ```
 smartTouchLayout.setMoveExitEnable(true);
 ```
-
-<br>设置是否需要支持缩放
+设置是否需要支持缩放
 ```
 smartTouchLayout.setZoomEnable(true);
 ```
