@@ -35,5 +35,5 @@ dependencies {
 
     //modules
 //    implementation project(':smartviewlibrary')
-    implementation 'com.jagger:SmartTouchLayout:1.0.0'
+    implementation 'com.jagger:SmartTouchLayout:1.0.1'
 }

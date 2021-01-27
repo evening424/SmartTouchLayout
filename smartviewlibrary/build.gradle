@@ -23,7 +23,7 @@ android {
         userOrg = 'jagger424'      //bintray注册的用户名
         groupId = 'com.jagger'         //compile引用时的第1部分groupId
         artifactId = 'SmartTouchLayout'     //compile引用时的第2部分项目名
-        publishVersion = '1.0.0'    //compile引用时的第3部分版本号
+        publishVersion = '1.0.1'    //compile引用时的第3部分版本号
         desc = 'This is layout for touch extend FrameLayout '
         website = 'https://github.com/evening424/SmartTouchLayout'
     }
