@@ -99,3 +99,11 @@ smartTouchLayout.setZoomEnable(true);
         <item name="android:windowIsTranslucent">true</item>
 </style>
 ```
+<br>
+<br>
+如果为哥你节省了几天宝贵的时间，为何不打赏一杯柠檬茶呢？
+-----------------
+<br>
+
+![](https://github.com/evening424/resource/blob/master/images/WechatIMG1.jpeg)
+
