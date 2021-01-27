@@ -114,10 +114,8 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * @param context
      * @return
      */
-    public static int getScreenWidth(Context context) {
+    private int getScreenWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        // 2019/5/21 Hardy 参考直播的 DisplayUtil
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
         }else{
@@ -133,10 +131,8 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * @param context
      * @return
      */
-    public static int getScreenHeight(Context context) {
+    private int getScreenHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        // 2019/5/21 Hardy 参考直播的 DisplayUtil
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
         }else{
@@ -155,10 +151,11 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
 
     /**
      * 设置结束时，动画回到什么位置和大小
-     * @param w    view.getWidth()
-     * @param h    view.getHeight()
-     * @param left view.getLeft()
-     * @param top  view.getTop()
+     * @param w    view.getWidth()  结束时的宽
+     * @param h    view.getHeight() 结束时的高
+     * @param left view location[0] 结束时相对屏幕的X坐标
+     * @param top  view location[1] 结束时相对屏幕的Y坐标
+     * @param scaleSide             结束时以宽/高拉伸
      */
     public void setEndViewLocalSize(int w, int h, int left, int top, EndViewScaleSide scaleSide) {
         endViewWidthSet = w;
