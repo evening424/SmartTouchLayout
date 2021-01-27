@@ -71,7 +71,15 @@ implementation 'com.jagger:SmartTouchLayout:1.0.0'
 3.属性设置
 <br>设置结束时动画飞到哪去，可指定位置和大小，效果如图1；不设置，则飞到底部如图2；
 ```
-smartTouchLayout.setEndViewLocalSize(结束时的宽，结束时的高，结束时的X坐标，结束时的Y坐标，结束时以宽/高拉申)
+/**
+ * 设置结束时，动画回到什么位置和大小
+ * @param w    view.getWidth()  结束时的宽
+ * @param h    view.getHeight() 结束时的高
+ * @param left view location[0] 结束时相对屏幕的X坐标
+ * @param top  view location[1] 结束时相对屏幕的Y坐标
+ * @param scaleSide             结束时以宽/高拉伸
+ */
+public void setEndViewLocalSize(int w, int h, int left, int top, EndViewScaleSide scaleSide)
 ```
 设置是否需要支持下滑关闭
 ```
