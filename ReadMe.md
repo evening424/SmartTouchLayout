@@ -53,3 +53,18 @@ FrameLayout怎么用，它就怎么用。<br>
 implementation 'com.jagger:SmartTouchLayout:1.0.0'
 ``` 
 
+
+2.直接在layout.xml文件中使用<br>
+  使用方式跟FrameLayout一样
+  
+```
+<com.jagger.smartviewlibrary.SmartTouchLayout
+        android:id="@+id/stl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        ...
+
+</com.jagger.smartviewlibrary.SmartTouchLayout>
+```
+
