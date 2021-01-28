@@ -106,7 +106,7 @@ smartTouchLayout.setZoomEnable(true);
 -----------------
 通过计算点击的时间差，判断是单击还是双击
 
-```
+```java
 
 private void checkClickDown(MotionEvent ev){
     if (0 == mInTouchEventCount.touchCount) { // 第一次按下时,开始统计
@@ -185,7 +185,7 @@ private class TouchEventHandler extends Handler {
 <br>
 如果单击，判断把事件向子VIEW传递还是自已处理
 
-```
+```java
 public boolean onInterceptTouchEvent(MotionEvent ev) {
 
     final int action = ev.getAction();
@@ -230,7 +230,7 @@ public boolean onInterceptTouchEvent(MotionEvent ev) {
 <br>
 处理缩放
 
-```
+```java
 @Override
 public boolean onScale(ScaleGestureDetector detector) {
     float scaleFactor = detector.getScaleFactor();
@@ -281,7 +281,7 @@ if(isZooming){
 <br>
 滑动和缩放过程中，处理边界回弹 checkBorder()
 
-```
+```java
 float overRightOffset = location[0] - (mCurrentScale*getWidth() - originalRight)*-1;
 float overBottomOffset = location[1] - (mCurrentScale*getHeight() - originalBottom)*-1;
 
