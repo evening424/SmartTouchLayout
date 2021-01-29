@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
-            android:text="就是一段文字"
+            android:text="没有指定退出坐标，滑动到底到消失"
             android:textStyle="bold"
             android:textColor="@color/colorAccent"
             android:textSize="20sp"/>

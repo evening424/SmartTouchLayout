@@ -58,6 +58,10 @@ public class ViewPageActivity extends AppCompatActivity {
         fragmentList.add(Fragment1.newFragment(mAttachList.get(0)));
         fragmentList.add(Fragment2.newFragment(mAttachList.get(1)));
         fragmentList.add(Fragment3.newFragment(mAttachList.get(2)));
+        fragmentList.add(Fragment1.newFragment(mAttachList.get(3)));
+        fragmentList.add(Fragment1.newFragment(mAttachList.get(4)));
+        fragmentList.add(Fragment1.newFragment(mAttachList.get(5)));
+        fragmentList.add(Fragment1.newFragment(mAttachList.get(6)));
         //
         MyFragmentPagerAdapter myFragmentPager = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(myFragmentPager);

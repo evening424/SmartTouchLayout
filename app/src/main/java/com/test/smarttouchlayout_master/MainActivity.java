@@ -57,9 +57,25 @@ public class MainActivity extends AppCompatActivity {
         DataBean bean3 = new DataBean();
         bean3.resId = R.drawable.img3;
 
+        DataBean bean4 = new DataBean();
+        bean4.resId = R.drawable.img4;
+
+        DataBean bean5 = new DataBean();
+        bean5.resId = R.drawable.img5;
+
+        DataBean bean6 = new DataBean();
+        bean6.resId = R.drawable.img6;
+
+        DataBean bean7 = new DataBean();
+        bean7.resId = R.drawable.img7;
+
         mList.add(bean1);
         mList.add(bean2);
         mList.add(bean3);
+        mList.add(bean4);
+        mList.add(bean5);
+        mList.add(bean6);
+        mList.add(bean7);
 
         mAdapter.notifyDataSetChanged();
     }

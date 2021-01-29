@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.jagger.smartviewlibrary.SmartTouchLayout;
@@ -43,7 +44,7 @@ public class Fragment2 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View customView = inflater.inflate(R.layout.fragment_fragment2, container, false);
-        customView.findViewById(R.id.img_photo).setBackgroundResource(dataBean.resId);
+        ((ImageView)customView.findViewById(R.id.img_photo)).setImageResource(dataBean.resId);
         customView.findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

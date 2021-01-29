@@ -6,12 +6,14 @@
     <com.jagger.smartviewlibrary.SmartTouchLayout
         android:id="@+id/stl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/img_photo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"/>
 
     </com.jagger.smartviewlibrary.SmartTouchLayout>
 

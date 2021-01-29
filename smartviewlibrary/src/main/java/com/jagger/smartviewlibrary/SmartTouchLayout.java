@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -33,7 +34,8 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
     private String TAG = "Jagger--->";          //把"//Log."替换为"Log."开打全局日志
     private final float MAX_SCALE = 4f;
     private final float MIN_SCALE = 0.7f;
-    private final int DOUBLE_CLICK_TIME_OFFSET = 300; //ms
+    private final int DOUBLE_CLICK_TIME_OFFSET = 300;   //ms
+    private final int DRAG_DOWN_EXIT_Y_OFF = 300;       //下滑触发关闭Y距离
 
     //滑动
     private int originalLeft, originalRight, originalBottom;    // 原始边界
@@ -51,7 +53,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
 
     private int screenHeight , screenWidth;     //设备屏幕高度
     private float oldX, oldY;                   //手机放在屏幕的坐标
-    private float movY;                         //移动中在屏幕上的坐标
+    private float movX, movY;                   //移动中在屏幕上的坐标
     private float alphaPercent = 1f;            //背景颜色透明度
     private boolean isFinish = false;           //是否执行关闭页面的操作
     private onEventListener eventListener = null;
@@ -260,7 +262,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
         if (!mScaleDetector.isInProgress()) {
             detector.onTouchEvent(event);
 
-            //Log.e(TAG, "onTouchEvent: " + event.getAction());
+            Log.e(TAG, "onTouchEvent: " + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     oldX = event.getRawX();
@@ -269,7 +271,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
                     break;
                 case MotionEvent.ACTION_MOVE:
                     isFinish = false;
-                    float movX = event.getRawX() - oldX;
+                    movX = event.getRawX() - oldX;
                     movY = event.getRawY() - oldY;
                     //Log.e(TAG, "onTouchEvent ACTION_MOVE movX:" + movX);
                     if(isZooming){
@@ -312,7 +314,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
 //                                }
 
                                 //下滑距离
-                                if(movY > 200){
+                                if(movY > DRAG_DOWN_EXIT_Y_OFF){
                                     isFinish = true;
                                 }
                             }
@@ -330,22 +332,28 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
                     // 点击松开 不需要break
                     checkClickUp(event.getRawX(), event.getRawY());
                 case MotionEvent.ACTION_CANCEL:
-                    //滑动松开
-                    if (isFinish) {
-                        isFinish = false;
-                        //Log.e(TAG, "页面返回");
-                        animEnding();
-                    } else {
+                    if (movX > mTouchSlop || movY > mTouchSlop) {
+                        //滑动松开
+                        if (isFinish) {
+                            isFinish = false;
+                            //Log.e(TAG, "页面返回");
+                            animEnding();
+                        } else {
 
-                        if(isZooming){
-                            checkBorder();
-                        }else{
-                            animRecovering();
+                            if(isZooming){
+                                checkBorder();
+                            }else{
+                                animRecovering();
+                            }
+
                         }
-
+                        isMoving = false;
+                        isLockMoveInZooming = false;
                     }
-                    isMoving = false;
-                    isLockMoveInZooming = false;
+//                    else{
+//                        // 点击松开
+//                        checkClickUp(event.getRawX(), event.getRawY());
+//                    }
                     break;
             }
         }
@@ -358,6 +366,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * 非缩放状态下，还原位置
      */
     private void animRecovering() {
+//        Log.i(TAG , "animRecovering");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             animate().setDuration(200)
                     .scaleX(1)
@@ -430,35 +439,79 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * 下滑关闭， 回弹到指定位置
      */
     private void animEnding() {
-        animate().setDuration(200)
-                .scaleX(endViewScale)
-                .scaleY(endViewScale)
-                .translationX(endViewLeft)    //移到某个坐标
-                .translationY(endViewTop)
-                .alpha(30)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animator) {
+        Log.i(TAG , "animEnding");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            animate().setDuration(250)
+                    .scaleX(endViewScale)
+                    .scaleY(endViewScale)
+                    .translationX(endViewLeft)    //移到某个坐标
+                    .translationY(endViewTop)
+                    .alpha(30)
+                    .setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            if (0 < animation.getAnimatedFraction() || animation.getAnimatedFraction() < 1) {
+                                float endAlphaPercent = (1 -animation.getAnimatedFraction());
+                                if(endAlphaPercent < alphaPercent){
+                                    ((ViewGroup) getParent()).setBackgroundColor(convertPercentToBlackAlphaColor(endAlphaPercent));
+                                }
+                            }
+                        }
+                    })
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        onDestroy();
-                        finishActivity();
-                    }
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            onDestroy();
+                            finishActivity();
+                        }
 
-                    @Override
-                    public void onAnimationCancel(Animator animator) {
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animator animator) {
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
 
-                    }
-                })
-                .start();
+                        }
+                    })
+                    .start();
+        }else{
+            animate().setDuration(1000)
+                    .scaleX(endViewScale)
+                    .scaleY(endViewScale)
+                    .translationX(endViewLeft)    //移到某个坐标
+                    .translationY(endViewTop)
+                    .alpha(30)
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            onDestroy();
+                            finishActivity();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    })
+                    .start();
+        }
     }
 
     /**
@@ -628,7 +681,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
 
     //-------------------------------- 单,双击处理 start --------------------------------
 
-    private float firstClickX, firstClickY, secondClickX, secondClickY;
+    private float clickXdown, clickYdown, firstClickX, firstClickY, secondClickX, secondClickY;
     // 统计?ms内的点击次数
     private TouchEventCountThread mInTouchEventCount = new TouchEventCountThread();
     // 根据TouchEventCountThread统计到的点击次数, perform单击还是双击事件
@@ -638,19 +691,28 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
         if (0 == mInTouchEventCount.touchCount) { // 第一次按下时,开始统计
             //Log.i(TAG , "checkClickDown 第一次按下时,开始统计" );
             postDelayed(mInTouchEventCount, DOUBLE_CLICK_TIME_OFFSET);
+            clickXdown = ev.getRawX();
+            clickYdown = ev.getRawY();
         }
     }
 
     private void checkClickUp(float clickX, float clickY){
-        //Log.i(TAG , "checkClickUp clickX:" + clickX + ",clickY:" + clickY);
+        Log.i(TAG , "checkClickUp clickX:" + clickX + ",clickY:" + clickY);
         // 一次点击事件要有按下和抬起, 有抬起必有按下, 所以只需要在ACTION_UP中处理
         if (!mInTouchEventCount.isLongClick) {
+
+            // 点下 和 松开 的距离判断，以免快速滑动导致误判为点击
+            if(Math.abs(clickXdown - clickX) > 60 || Math.abs(clickYdown - clickY) > 60) {
+                return;
+            }
+
+            // 累加点击数
             mInTouchEventCount.touchCount++;
 
             if(mInTouchEventCount.touchCount == 1){
                 firstClickX = clickX;
                 firstClickY = clickY;
-                //Log.i(TAG , "checkClickUp 点击第一下");
+                Log.i(TAG , "checkClickUp 点击第一下");
             }else if(mInTouchEventCount.touchCount == 2){
                 secondClickX = clickX;
                 secondClickY = clickY;
@@ -664,7 +726,7 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
                 }else{
                     //Double click 不成立，当单击处理
                     mInTouchEventCount.touchCount = 1;
-                    //Log.i(TAG , "checkClickUp Double click 不成立，当单击处理");
+//                    Log.i(TAG , "checkClickUp Double click 不成立，当单击处理");
                 }
             }else{
                 mInTouchEventCount.touchCount = 0;
@@ -691,14 +753,14 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
                 mTouchEventHandler.sendMessage(msg);
                 touchCount = 0;
             }
-            //Log.i(TAG , "TouchEventCountThread 结束:" + touchCount);
+//            Log.i(TAG , "TouchEventCountThread 结束:" + touchCount);
         }
     }
 
     private class TouchEventHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            //Log.i(TAG, "touch " + msg.arg1 + " time.");
+            Log.i(TAG, "touch " + msg.arg1 + " time.");
             if(msg.arg1 == 1){
                 onSingleClicked(oldX, oldY);
             }else{
@@ -713,8 +775,9 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
      * @param clickY
      */
     private void onSingleClicked(float clickX, float clickY){
+        Log.i(TAG , "onSingleClicked isZooming:" + isZooming + ",isLockMoveInZooming:" + isLockMoveInZooming);
         if(!isZooming && !isLockMoveInZooming){
-            isFinish = false;
+//            isFinish = true;
             animEnding();
         }
     }
@@ -791,17 +854,20 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
             endViewScale = endViewHeightSet*1.0f / getMeasuredHeight();
         }
 
-        //Logd(TAG, "getMeasuredWidth:" + getMeasuredWidth() + ",getMeasuredHeight:" + getMeasuredHeight());
-        //Logd(TAG, "endViewScaleX:" + endViewScaleX + ",endViewScaleY:" + endViewScaleY);
+        //Log.d(TAG, "getMeasuredWidth:" + getMeasuredWidth() + ",getMeasuredHeight:" + getMeasuredHeight());
+        //Log.d(TAG, "endViewScaleX:" + endViewScaleX + ",endViewScaleY:" + endViewScaleY);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //当前VIEW处于屏幕坐标(如果在ViewPage中使用，X则处于屏幕外)
-//        int[]location = new int[2];
-//        getLocationOnScreen(location);
-//        //Logd(TAG, "onLayout getX:" + location[0] + ",getY:" + location[1]);
+        int[]location = new int[2];
+        getLocationOnScreen(location);
+//        Log.d(TAG, "onLayout getX:" + location[0] + ",getY:" + location[1] + ",top:" + top);
+
+        //自己处于屏幕的Y - 自己处于Activity的Y，计算出Activity左上角Y坐标，不会因为是否有TitleBar、ActionBar以致结束的位置不准
+        int activityYOff = Math.abs(location[1] - top) ;
 
         //相对于Activity的坐标
         //Logd(TAG, "-------- left:" + left + ",top:" + top + ",right:" + right);
@@ -829,6 +895,9 @@ public class SmartTouchLayout extends FrameLayout implements GestureDetector.OnG
         // 再减去缩放后长宽差 (中心点重合)
         endViewLeft -= ((endViewScale * getWidth()) - endViewWidthSet) /2 ;
         endViewTop -= ((endViewScale * getHeight()) - endViewHeightSet) /2 ;
+
+        // 再减去Activity的Y相对于屏幕的偏移
+        endViewTop -= activityYOff;
     }
 
     @Override

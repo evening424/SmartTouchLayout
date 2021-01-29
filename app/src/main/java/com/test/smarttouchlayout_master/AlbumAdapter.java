@@ -54,7 +54,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final DataBean item = mList.get(position);
-        ((ViewHolderPhotoUnLock)holder).img_photo.setBackgroundResource(item.resId);
+        ((ViewHolderPhotoUnLock)holder).img_photo.setImageResource(item.resId);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
