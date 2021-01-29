@@ -26,23 +26,31 @@ FrameLayout怎么用，它就怎么用。<br>
 疑车不能无据，直接上图
 -----------------
 
-![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053733_974.gif)
+![](https://github.com/evening424/resource/blob/master/Gif/Video_20210129_055202_927.gif)
 <br>
 双指、双击缩放；下滑退出到指定位置;
 <br>
 <br>
 
-![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053832_721.gif)
+![](https://github.com/evening424/resource/blob/master/Gif/Video_20210129_055219_439.gif)
 <br>
 不影响子控件事件；不指定位置时，下滑到底部消失;
 <br>
 <br>
 
-![](https://github.com/evening424/SmartTouchLayout/blob/master/ImageCache/Video_20210125_053812_258.gif)
+![](https://github.com/evening424/resource/blob/master/Gif/Video_20210129_055226_655.gif)
 <br>
 与ViewPage不冲突；
 <br>
 <br>
+<br>
+
+下载体验
+-----------------
+<br>
+
+![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.2_download.png?raw=true)
+
 <br>
 
 如何使用
@@ -50,7 +58,7 @@ FrameLayout怎么用，它就怎么用。<br>
 1.引用<br>
 
 ```
-implementation 'com.jagger:SmartTouchLayout:1.0.2'
+implementation 'com.jagger:SmartTouchLayout:1.0.4'
 ``` 
 
 
@@ -306,14 +314,6 @@ if(location[0] > 0){
 
 <br>
 
-
-下载体验
------------------
-<br>
-
-![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.2_download.png?raw=true)
-
-<br>
 
 如果为哥你节省了几天宝贵的时间，为何不打赏一杯柠檬茶呢？
 -----------------
