@@ -49,7 +49,7 @@ FrameLayout怎么用，它就怎么用。<br>
 -----------------
 <br>
 
-![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.2_download.png?raw=true)
+![](https://github.com/evening424/resource/raw/master/apk/SmartTouchLayout_Demo_v1.0.4.apk)
 
 <br>
 
