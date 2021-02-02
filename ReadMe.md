@@ -45,15 +45,15 @@ FrameLayout怎么用，它就怎么用。<br>
 <br>
 <br>
 
+美图看完了，可否打赏个 ⭐️ 
+<br>
+
 下载体验
 -----------------
 <br>
 
 ![](https://github.com/evening424/resource/blob/master/images/SmartTouchLayout_Demo_v1.0.4_download.png?raw=true)
 
-<br>
-
-哥们可否赏个 ⭐️ 
 <br>
 
 如何使用
